@@ -10,7 +10,7 @@ const Home: React.FC = () => {
       sx={{
         height: '100vh',  // Full viewport height
         width: '100vw',   // Full viewport width
-        background: `linear-gradient(45deg, ${theme.palette.background.default}, ${theme.palette.background.paper})`, // Dark gradient using background colors
+        background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`, // Gradient using primary and secondary colors
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -22,7 +22,8 @@ const Home: React.FC = () => {
         left: 0,           // Position at the left of the viewport
       }}
     >
-      {/* to do later */}
+      {/* Placeholder content */}
+      Whoami?
     </Box>
   );
 };

@@ -3,18 +3,18 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#00A9E0',  // Electric Blue (Primary color)
+      main: '#B0B0B0',  // Light Gray (Primary color)
     },
     secondary: {
-      main: '#39FF14',  // Neon Green (Secondary color)
+      main: '#8A8A8A',  // Muted Gray (Secondary color)
     },
     background: {
-      default: '#1e1e1e',  // Dark Charcoal (Primary background)
-      paper: '#121212',    // Deep Black (Secondary background)
+      default: '#121212',  // Deep Black (Primary background)
+      paper: '#1e1e1e',    // Dark Charcoal (Secondary background)
     },
     text: {
       primary: '#E0E0E0',  // Light Gray (Primary text)
-      secondary: '#B0B0B0', // Slate Gray (Secondary text)
+      secondary: '#A0A0A0', // Darker Gray (Secondary text)
     },
     divider: '#3A3A3A',    // Dim Gray (Dividers)
   },
@@ -29,7 +29,7 @@ const theme = createTheme({
     MuiTypography: {
       styleOverrides: {
         root: {
-          fontFamily: 'Roboto, sans-serif',
+          fontFamily: 'Montserrat, sans-serif',
         },
       },
     },
