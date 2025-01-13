@@ -1,12 +1,17 @@
-function App() {
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import RoutesComponent from './routing/RoutesComponent';
+import theme from './styles/theme';  
 
+const App: React.FC = () => {
   return (
-    <>
-      <p >
-        Bleak's portfolio
-      </p>
-    </>
-  )
-}
+    <ThemeProvider theme={theme}>
+      <Router>
+        <RoutesComponent />
+      </Router>
+    </ThemeProvider>
+  );
+};
 
-export default App
+export default App;
