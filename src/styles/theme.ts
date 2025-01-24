@@ -3,20 +3,20 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#B0B0B0',  // Light Gray (Primary color)
+      main: '#87CEEB',  
     },
     secondary: {
-      main: '#8A8A8A',  // Muted Gray (Secondary color)
+      main: '#FFD700',  
     },
     background: {
-      default: '#121212',  // Deep Black (Primary background)
-      paper: '#1e1e1e',    // Dark Charcoal (Secondary background)
+      default: '#a50c34', 
+      paper: '#0E0E11',    
     },
     text: {
-      primary: '#E0E0E0',  // Light Gray (Primary text)
-      secondary: '#A0A0A0', // Darker Gray (Secondary text)
+      primary: '#FFFFFF',  
+      secondary: '#B0C4DE', 
     },
-    divider: '#3A3A3A',    // Dim Gray (Dividers)
+    divider: '#5F9EA0',    
   },
   components: {
     MuiButton: {
@@ -29,7 +29,7 @@ const theme = createTheme({
     MuiTypography: {
       styleOverrides: {
         root: {
-          fontFamily: 'Montserrat, sans-serif',
+          fontFamily: 'Cairo, sans-serif',
         },
       },
     },
