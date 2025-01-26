@@ -1,87 +1,62 @@
-import React, { useEffect, useState } from 'react';
-import { useTheme } from '@mui/material/styles';
-import { Box } from '@mui/material';
-
-const Home: React.FC = () => {
-  const theme = useTheme(); 
-
-  const generateInitialPixels = () => {
-    const pixels = [];
-    const numPixels = 15; 
-
-    for (let i = 0; i < numPixels; i++) {
-      pixels.push({
-        id: i,
-        top: Math.random() * 100, 
-        left: Math.random() * 100, 
-        speedX: (Math.random() - 0.5) * 0.5, 
-        speedY: (Math.random() - 0.5) * 0.5, 
-      });
-    }
-
-    return pixels;
-  };
-
-  const [pixels, setPixels] = useState(generateInitialPixels());
+import { useEffect, useRef } from 'react';
+import { Box, Stack } from '@mui/material';
+import useHomeStore from '../stores/homeStore';
+import AdminBox from '../reusable_components/AdminBox';
+import GuestBox from '../reusable_components/GuestBox';
+const Home = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { initializePixels, startAnimation, stopAnimation } = useHomeStore();
 
   useEffect(() => {
-    const movePixels = () => {
-      setPixels((prevPixels) =>
-        prevPixels.map((pixel) => {
-          let newTop = pixel.top + pixel.speedY;
-          let newLeft = pixel.left + pixel.speedX;
-
-  
-          if (newTop > 100) newTop = 0;
-          if (newTop < 0) newTop = 100;
-          if (newLeft > 100) newLeft = 0;
-          if (newLeft < 0) newLeft = 100;
-
-          return {
-            ...pixel,
-            top: newTop,
-            left: newLeft,
-          };
-        })
-      );
+    // Initialize pixels on mount
+    initializePixels();
+    // Start the animation loop
+    const canvas = canvasRef.current;
+    if (canvas) {
+      startAnimation(canvas);
+    }
+    // Cleanup on unmount
+    return () => {
+      stopAnimation();
     };
-
-    const intervalId = setInterval(movePixels, 30); 
-
-    return () => clearInterval(intervalId); 
-  }, []);
+  }, [initializePixels, startAnimation, stopAnimation]);
 
   return (
     <Box
       sx={{
-        height: '100vh',  
-        width: '100vw',  
-        background: `linear-gradient(45deg, ${theme.palette.background.default}, ${theme.palette.background.paper})`,
+        height: '100vh',
+        width: '100vw',
+        overflow: 'hidden',
+        position: 'fixed',
+        top: 0,
+        left: 0,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 0,        
-        padding: 0,        
-        overflow: 'hidden', 
-        position: 'absolute', 
-        top: 0,           
-        left: 0,           
+        backgroundColor: '#001F3F', // Background color for the entire page
       }}
     >
-      {pixels.map((pixel) => (
-        <Box
-          key={pixel.id}
-          sx={{
-            position: 'absolute',
-            width: '2px',
-            height: '2px',
-            backgroundColor: '#FFFFFF', 
-            boxShadow: '0 0 5px #FFFFFF',
-            top: `${pixel.top}%`,
-            left: `${pixel.left}%`,
+      <canvas
+        ref={canvasRef}
+        width={window.innerWidth}
+        height={window.innerHeight}
+        style={{ position: 'absolute', zIndex: 1 }}
+      />
+      
+      <Stack 
+          direction={{ xs: 'column', sm: 'row' }} // Column on small screens, row on larger screens
+          spacing={{ xs: 2, sm: 4 }} // Adjust spacing based on screen size
+          sx={{ 
+            zIndex: 2, 
+            position: 'relative',
+            backgroundColor: 'transparent',
+            alignItems: 'center', // Center items vertically
+            justifyContent: 'center', // Center items horizontally
           }}
-        />
-      ))}
+        >
+        <GuestBox /> {/* Use GuestBox component */}
+        <AdminBox /> {/* Use AdminBox component */}
+      </Stack>
     </Box>
   );
 };

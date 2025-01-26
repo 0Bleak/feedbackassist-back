@@ -3,33 +3,33 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#87CEEB',  
+      main: '#333333',  // Dark gray (for buttons and borders)
     },
     secondary: {
-      main: '#FFD700',  
+      main: '#555555',  // Slightly lighter gray (for subtle elements)
     },
     background: {
-      default: '#a50c34', 
-      paper: '#0E0E11',    
+      default: '#000000',  // Black (whole page background)
+      paper: '#111111',    // Dark gray (for paper elements like forms)
     },
     text: {
-      primary: '#FFFFFF',  
-      secondary: '#B0C4DE', 
+      primary: '#FFFFFF',  // White (for text to stand out against dark background)
+      secondary: '#B0B0B0', // Soft light gray (for secondary text)
     },
-    divider: '#5F9EA0',    
+    divider: '#444444',    // Darker gray for dividers
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: '8px', 
+          borderRadius: '8px', // Smooth corners for buttons
         },
       },
     },
     MuiTypography: {
       styleOverrides: {
         root: {
-          fontFamily: 'Cairo, sans-serif',
+          fontFamily: 'Cairo, sans-serif', // Retained for aesthetics
         },
       },
     },
