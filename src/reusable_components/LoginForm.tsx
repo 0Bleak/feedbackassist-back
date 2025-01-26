@@ -1,13 +1,12 @@
 import { Box, TextField, Button, Typography } from "@mui/material";
+import useAuthStore from "../stores/authStore"; // Import the Zustand store
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useTheme } from "@mui/material/styles";
-import useAuthStore from "../stores/authStore"; // Zustand store for auth
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const { setAuth } = useAuthStore(); // Removed role as it's not used here
+  const { login } = useAuthStore(); // Use the login method from the store
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -18,38 +17,19 @@ const LoginForm = () => {
     const password = formData.get("password") as string;
 
     try {
-      const response = await axios.post(
-        "http://localhost:5555/api/auth/login", 
-        { email, password }, 
-        { withCredentials: true }
-      );
+      await login(email, password); // Call the login method from the store
 
-      console.log("Response:", response); // Check the response from the server
-      const { accessToken, role } = response.data;
-
-      if (accessToken && role) {
-        // Save token and role in Zustand store
-        setAuth({ accessToken, role });
-
-        // Log Zustand store state after updating
-        console.log("State after setting:", { accessToken, role });
-
-        // Introduce a small delay for state update to be handled
-        setTimeout(() => {
-          if (role === "admin") {
-            console.log("Navigating to /admin");
-            navigate("/admin");
-          } else if (role === "superadmin") {
-            console.log("Navigating to /superadmin");
-            navigate("/superadmin");
-          }
-        }, 500); // Small delay to ensure state update completes before navigation
-      } else {
-        console.error("Access token or role missing in response");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("Login failed. Please check your credentials.");
+      // Introduce a small delay for state update to be handled
+      setTimeout(() => {
+        const { role } = useAuthStore.getState(); // Get the latest role from the store
+        if (role === "admin") {
+          navigate("/admin");
+        } else if (role === "superadmin") {
+          navigate("/superadmin");
+        }
+      }, 500); // Small delay to ensure state update completes before navigation
+    } catch (error:any) {
+      alert(error.message); // Show error message if login fails
     }
   };
 
