@@ -52,13 +52,6 @@ const SuperadminPage = () => {
         background: `linear-gradient(45deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
       }}
     >
-      <Box sx={{ textAlign: "center", mb: 4 }}>
-        <Typography variant="h3">Welcome, Superadmin!</Typography>
-        <Typography variant="body1" sx={{ mt: 2 }}>
-          You have full control over the system.
-        </Typography>
-      </Box>
-
       {role === "superadmin" && renderComponent()}
     </Box>
   );

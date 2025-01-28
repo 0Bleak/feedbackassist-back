@@ -8,10 +8,18 @@ import {
   Paper,
   Box,
   Link,
+  Chip,
+  IconButton,
+  Tooltip,
+  ThemeProvider,
 } from "@mui/material";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import LinkIcon from "@mui/icons-material/Link";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import useQuestionPageStore from "../stores/questionPageStore";
-import axios from "axios";
 import useAuthStore from "../stores/authStore";
+import axios from "axios";
+import theme from "../styles/theme";
 
 const GetAllQuestions: React.FC = () => {
   const setCurrentPage = useQuestionPageStore((state) => state.setCurrentPage);
@@ -20,12 +28,12 @@ const GetAllQuestions: React.FC = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
   const [page, setPage] = React.useState<number>(1);
-  const itemsPerPage = 6; // Number of questions per page
+  const [copiedId, setCopiedId] = React.useState<string | null>(null);
+  const itemsPerPage = 5; // Updated limit to 5 items per page
 
-  // Fetch questions when component mounts
   React.useEffect(() => {
     const fetchQuestions = async () => {
-      setLoading(true); // Start loading when request is sent
+      setLoading(true);
       try {
         const response = await axios.get("http://localhost:5555/api/questions", {
           headers: {
@@ -37,142 +45,190 @@ const GetAllQuestions: React.FC = () => {
         setError("Error fetching questions.");
         console.error("Error fetching questions:", error);
       } finally {
-        setLoading(false); // Stop loading when request is completed
+        setLoading(false);
       }
     };
 
     fetchQuestions();
   }, [accessToken]);
 
-  // Pagination logic
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const paginatedQuestions = questions.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
+  const handleCopyId = (id: string) => {
+    navigator.clipboard.writeText(id);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const startIndex = (page - 1) * itemsPerPage;
+  const paginatedQuestions = questions.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(questions.length / itemsPerPage);
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
-        <CircularProgress />
-      </Box>
+      <ThemeProvider theme={theme}>
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+          <CircularProgress />
+        </Box>
+      </ThemeProvider>
     );
   }
 
   return (
-    <Box sx={{ padding: 3 }}>
-      <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold", color: "primary.main" }}>
-        All Questions
-      </Typography>
-      {error && (
-        <Typography color="error" sx={{ marginBottom: 2 }}>
-          {error}
-        </Typography>
-      )}
+    <ThemeProvider theme={theme}>
+      <Box sx={{ padding: 3, backgroundColor: "background.default", color: "text.primary", minHeight: "80vh",minWidth:"80vw" }}>
+        <Box
+          sx={{
+            position: "sticky",
+            top: 0,
+            backgroundColor: "background.paper",
+            zIndex: 1000,
+            paddingBottom: 2,
+            marginBottom: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexDirection: "row" }}>
+            <Box sx={{ display: "flex", alignItems: "center", flexDirection: "row" }}>
+              <IconButton onClick={() => setCurrentPage("Picker")}>
+                <ArrowBackIcon color="primary" />
+              </IconButton>
+              <Typography variant="h5" sx={{ marginLeft: 2 }}>
+                Questions ({questions.length} total)
+              </Typography>
+            </Box>
+            <Typography variant="body2" color="text.secondary">
+              Page {page} of {totalPages}
+            </Typography>
+          </Box>
+        </Box>
 
-      <Grid container spacing={3}>
-        {paginatedQuestions.map((question) => (
-          <Grid item xs={12} sm={6} md={4} key={question._id}>
+        {error && (
+          <Paper sx={{ p: 2, mb: 2, bgcolor: "background.paper" }}>
+            <Typography color="error">{error}</Typography>
+          </Paper>
+        )}
+
+        <Box sx={{ mb: 4 }}>
+          {paginatedQuestions.map((question, idx) => (
             <Paper
-              elevation={3}
+              key={question._id}
               sx={{
-                padding: 3,
-                borderRadius: 2,
-                transition: "transform 0.2s, box-shadow 0.2s",
+                p: 2,
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                gap: 1,
+                backgroundColor: "#1E1E1E",
                 "&:hover": {
-                  transform: "scale(1.02)",
-                  boxShadow: 6,
+                  backgroundColor: "#2D2D2D",
                 },
-                overflow: "hidden", // Prevent any overflow outside the container
-                width: "100%", // Ensure full width for the Paper container
               }}
             >
-              <Typography
-                variant="h6"
-                gutterBottom
-                sx={{
-                  fontWeight: "bold",
-                  color: "text.primary",
-                  whiteSpace: "nowrap", // Prevent text wrapping to a new line
-                  overflow: "hidden", // Hide anything that overflows the container
-                  textOverflow: "ellipsis", // Add ellipsis for overflow text
-                  display: "inline-block", // Let the text take its natural width
-                  maxWidth: "100%", // Allow container to expand with text
-                  width: "auto", // Make sure it auto sizes to fit the text
-                }}
-              >
-                Question ID: {question._id}
-              </Typography>
-              <Typography variant="body1" gutterBottom sx={{ color: "text.secondary", wordBreak: "break-word" }}>
-                {question.label}
-              </Typography>
-              <Typography variant="body2" sx={{ marginTop: 2, fontWeight: "bold", color: "text.primary" }}>
-                Options:
-              </Typography>
-              <Box sx={{ marginTop: 1 }}>
-                {question.options.map((opt: any, index: number) => (
+              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    bgcolor: "#333",
+                    p: 0.5,
+                    borderRadius: 1,
+                    minWidth: 24,
+                    textAlign: "center",
+                  }}
+                >
+                  {startIndex + idx + 1}.
+                </Typography>
+                <Tooltip title={copiedId === question._id ? "Copied!" : "Copy ID"}>
+                  <Chip
+                    label={question._id}
+                    size="small"
+                    onClick={() => handleCopyId(question._id)}
+                    icon={<ContentCopyIcon fontSize="small" />}
+                    sx={{
+                      backgroundColor: "#333",
+                      color: "white",
+                      "& .MuiChip-icon": {
+                        color: "white",
+                      },
+                    }}
+                  />
+                </Tooltip>
+              </Box>
+
+              <Box sx={{ pl: 4 }}>
+                <Typography sx={{ color: "#ccc" }}>{question.label}</Typography>
+              </Box>
+
+              <Box sx={{ pl: 4, display: "flex", gap: 1 }}>
+                {question.options.map((opt: any, optIdx: number) => (
                   <Box
-                    key={index}
+                    key={optIdx}
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      marginBottom: 1,
-                      padding: 1,
-                      backgroundColor: "background.paper",
+                      backgroundColor: "#333",
+                      p: 0.5,
                       borderRadius: 1,
-                      width: "100%", // Ensure full width for the option box
                     }}
                   >
-                    <Typography variant="body2" sx={{ flexGrow: 1, color: "text.secondary" }}>
+                    <Typography variant="body2" sx={{ color: "#ccc" }}>
                       {opt.value}
                     </Typography>
                     {opt.url && (
                       <Link
                         href={opt.url}
                         target="_blank"
-                        rel="noopener"
-                        sx={{ color: "primary.main", textDecoration: "none", "&:hover": { textDecoration: "underline" } }}
+                        sx={{
+                          ml: 0.5,
+                          color: "#666",
+                          "&:hover": {
+                            color: "white",
+                          },
+                        }}
                       >
-                        (Link)
+                        <LinkIcon fontSize="small" />
                       </Link>
                     )}
                   </Box>
                 ))}
               </Box>
             </Paper>
-          </Grid>
-        ))}
-      </Grid>
+          ))}
+        </Box>
 
-      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
-        <Pagination
-          count={Math.ceil(questions.length / itemsPerPage)}
-          page={page}
-          onChange={handlePageChange}
-          color="primary"
-          sx={{ "& .MuiPaginationItem-root": { fontSize: "1rem" } }}
-        />
+        {totalPages > 1 && (
+          <Box
+            sx={{
+              position: "sticky",
+              bottom: 20,
+              display: "flex",
+              justifyContent: "center",
+              zIndex: 1000,
+            }}
+          >
+            <Paper
+              sx={{
+                p: 1,
+                boxShadow: 3,
+                bgcolor: "rgba(0, 0, 0, 0.3)",
+                backdropFilter: "blur(5px)",
+              }}
+            >
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+                showFirstButton
+                showLastButton
+              />
+            </Paper>
+          </Box>
+        )}
       </Box>
-
-      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 3 }}>
-        <Button
-          variant="outlined"
-          onClick={() => setCurrentPage("Picker")}
-          sx={{
-            padding: "8px 24px",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            borderRadius: 2,
-            "&:hover": { backgroundColor: "primary.main", color: "white" },
-          }}
-        >
-          Return
-        </Button>
-      </Box>
-    </Box>
+    </ThemeProvider>
   );
 };
 
