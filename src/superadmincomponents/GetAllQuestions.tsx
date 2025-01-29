@@ -16,7 +16,7 @@ import {
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LinkIcon from "@mui/icons-material/Link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import useQuestionPageStore from "../stores/questionPageStore";
+import useQuestionPageStore from "../stores/superAdminPageStore";
 import useAuthStore from "../stores/authStore";
 import axios from "axios";
 import theme from "../styles/theme";

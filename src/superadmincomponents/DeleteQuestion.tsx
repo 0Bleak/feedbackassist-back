@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, TextField, Typography } from "@mui/material";
-import useQuestionPageStore from "../stores/questionPageStore";
+import { Button, TextField, Typography, Box, Stack } from "@mui/material";
+import useQuestionPageStore from "../stores/superAdminPageStore";
 import axios from "axios";
 import useAuthStore from "../stores/authStore";
 
@@ -24,22 +24,46 @@ const DeleteQuestion: React.FC = () => {
   };
 
   return (
-    <div>
-      <Typography variant="h4">Delete Question</Typography>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        gap: 3,
+        padding: 3,
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Delete Question
+      </Typography>
       <TextField
         fullWidth
         label="Question ID"
         value={questionId}
         onChange={(e) => setQuestionId(e.target.value)}
         required
+        sx={{ maxWidth: 400 }}
       />
-      <Button variant="contained" onClick={handleDelete}>
-        Delete
-      </Button>
-      <Button variant="outlined" onClick={() => setCurrentPage("Picker")}>
-        Return
-      </Button>
-    </div>
+      <Stack direction="row" spacing={2}>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleDelete}
+          sx={{ fontWeight: "bold" }}
+        >
+          Delete
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => setCurrentPage("Picker")}
+          sx={{ fontWeight: "bold" }}
+        >
+          Return
+        </Button>
+      </Stack>
+    </Box>
   );
 };
 

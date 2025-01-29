@@ -1,17 +1,17 @@
-import { Box, TextField, Button, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Box, TextField, Button, Typography, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import useFormStore from "../stores/formStore"; // Import the form store
-import useAuthStore from "../stores/authStore"; // Import the auth store
-import { useState } from "react"; // Import useState for local state management
-
-const CreateAdmin = () => {
+import useFormStore from "../stores/formStore";
+import useAuthStore from "../stores/authStore";
+import superAdminPageStore from "../stores/superAdminPageStore";
+const CreateAdmin: React.FC = () => {
   const theme = useTheme();
-  const [message, setMessage] = useState(""); // Local state for messages
-  const [role, setRole] = useState("admin"); // Local state for role
-
-  // Zustand stores
+  const setCurrentPage = superAdminPageStore((state) => state.setCurrentPage); // Access Zustand store for navigation
   const { email, password, setEmail, setPassword } = useFormStore();
   const { accessToken } = useAuthStore();
+
+  const [message, setMessage] = useState("");
+  const [role, setRole] = useState("admin");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,17 +43,22 @@ const CreateAdmin = () => {
   return (
     <Box
       sx={{
-        mt: 4,
-        p: 4,
-        borderRadius: 2,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "75vh",
+        gap: 3,
+        padding: 3,
         background: theme.palette.background.paper,
         boxShadow: theme.shadows[3],
+        borderRadius: 2,
       }}
     >
       <Typography variant="h5" gutterBottom>
         Create New Admin
       </Typography>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ width: "100%", maxWidth: 400 }}>
         <TextField
           label="Email"
           type="email"
@@ -91,7 +96,8 @@ const CreateAdmin = () => {
           type="submit"
           variant="contained"
           color="primary"
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, fontWeight: "bold" }}
+          fullWidth
         >
           Create Admin
         </Button>
@@ -104,6 +110,15 @@ const CreateAdmin = () => {
           {message}
         </Typography>
       )}
+      <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+        <Button
+          variant="outlined"
+          onClick={() => setCurrentPage("Picker")}
+          sx={{ fontWeight: "bold" }}
+        >
+          Return
+        </Button>
+      </Stack>
     </Box>
   );
 };

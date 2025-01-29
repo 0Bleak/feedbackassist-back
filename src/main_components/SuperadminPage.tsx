@@ -1,14 +1,15 @@
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useAuthStore from "../stores/authStore";
-import useQuestionPageStore from "../stores/questionPageStore";
-import AddQuestion from "../questions components/AddQuestion";
-import GetAllQuestions from "../questions components/GetAllQuestions";
-import GetQuestionById from "../questions components/GetQuestionById";
-import UpdateQuestion from "../questions components/UpdateQuestion";
-import DeleteQuestion from "../questions components/DeleteQuestion";
-import DeleteAllQuestions from "../questions components/DeleteAllQuestions";
-import Picker from "../questions components/Picker";
+import useQuestionPageStore from "../stores/superAdminPageStore";
+import AddQuestion from "../superadmincomponents/AddQuestion";
+import GetAllQuestions from "../superadmincomponents/GetAllQuestions";
+import GetQuestionById from "../superadmincomponents/GetQuestionById";
+import UpdateQuestion from "../superadmincomponents/UpdateQuestion";
+import DeleteQuestion from "../superadmincomponents/DeleteQuestion";
+import DeleteAllQuestions from "../superadmincomponents/DeleteAllQuestions";
+import CreateAdmin from "../superadmincomponents/CreateAdmin";
+import Picker from "../superadmincomponents/Picker";
 
 const SuperadminPage = () => {
   const theme = useTheme();
@@ -31,6 +32,8 @@ const SuperadminPage = () => {
         return <DeleteQuestion />;
       case "DeleteAllQuestions":
         return <DeleteAllQuestions />;
+      case "CreateAdmin":
+        return <CreateAdmin/>
       default:
         return null;
     }
