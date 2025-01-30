@@ -1,12 +1,25 @@
 import { Box, TextField, Button, Typography } from "@mui/material";
-import useAuthStore from "../stores/authStore"; // Import the Zustand store
+import useAuthStore from "../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
+import { useEffect } from "react";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const { login } = useAuthStore(); // Use the login method from the store
+  const { login, isLoggedIn, role } = useAuthStore();
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      if (role === "superadmin") {
+        navigate("/superadmin");
+      } else if (role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/home");
+      }
+    }
+  }, [isLoggedIn, role, navigate]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -17,19 +30,16 @@ const LoginForm = () => {
     const password = formData.get("password") as string;
 
     try {
-      await login(email, password); // Call the login method from the store
-
-      // Introduce a small delay for state update to be handled
-      setTimeout(() => {
-        const { role } = useAuthStore.getState(); // Get the latest role from the store
-        if (role === "admin") {
-          navigate("/admin");
-        } else if (role === "superadmin") {
-          navigate("/superadmin");
-        }
-      }, 500); // Small delay to ensure state update completes before navigation
-    } catch (error:any) {
-      alert(error.message); // Show error message if login fails
+      await login(email, password);
+      const { role } = useAuthStore.getState();
+      
+      if (role === "admin") {
+        navigate("/admin");
+      } else if (role === "superadmin") {
+        navigate("/superadmin");
+      }
+    } catch (error: any) {
+      alert(error.message);
     }
   };
 

@@ -8,7 +8,7 @@ import GuestPage from "../main_components/GuestPage";
 import LoginForm from "../reusable_components/LoginForm";
 
 const RoutesComponent: React.FC = () => {
-  const { role } = useAuthStore(); // Access role from Zustand store
+  const { role, isLoggedIn } = useAuthStore();
 
   return (
     <Routes>
@@ -16,11 +16,22 @@ const RoutesComponent: React.FC = () => {
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<LoginForm />} />
       
-      {/* Protected Routes */}
-      <Route path="/admin" element={role === 'admin' ? <AdminPage /> : <Navigate to="/login" />} />
-      <Route path="/superadmin" element={role === 'superadmin' ? <SuperadminPage /> : <Navigate to="/login" />} />
-      
-      {/* Guest route */}
+      <Route 
+        path="/admin" 
+        element={
+          isLoggedIn() && role === 'admin' ? 
+            <AdminPage /> : 
+            <Navigate to="/home" />
+        } 
+      />
+      <Route 
+        path="/superadmin" 
+        element={
+          isLoggedIn() && role === 'superadmin' ? 
+            <SuperadminPage /> : 
+            <Navigate to="/home" />
+        } 
+      />
       <Route path="/guest" element={<GuestPage />} />
     </Routes>
   );

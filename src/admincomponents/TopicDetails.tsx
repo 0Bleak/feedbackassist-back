@@ -18,7 +18,8 @@ import {
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LinkIcon from "@mui/icons-material/Link";
-import useSuperAdminPageStore from "../stores/superAdminPageStore"; // Zustand store for navigation
+import useAdminPageStore from "../stores/adminPageStore";
+
 
 interface Question {
   _id: string;
@@ -42,7 +43,7 @@ const TopicDetails: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false); // Loading state for fetching topics
   const [isFetchingDetails, setIsFetchingDetails] = useState(false); // Loading state for fetching topic details
   const [copiedId, setCopiedId] = useState<string | null>(null); // For copying question IDs
-  const setCurrentPage = useSuperAdminPageStore((state) => state.setCurrentPage);
+  const setCurrentPage = useAdminPageStore((state) => state.setCurrentPage);
 
   // Fetch all topics for selection
   useEffect(() => {

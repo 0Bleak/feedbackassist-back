@@ -9,17 +9,15 @@ import {
   Tooltip,
   Chip,
 } from "@mui/material";
-import { 
+import {
   ArrowBack as ArrowBackIcon,
-  ContentCopy as ContentCopyIcon 
+  ContentCopy as ContentCopyIcon
 } from "@mui/icons-material";
 import useQuestionPageStore from "../stores/superAdminPageStore";
-import useAuthStore from "../stores/authStore";
 import axios from "axios";
 
 const GetAllTopics: React.FC = () => {
   const setCurrentPage = useQuestionPageStore((state) => state.setCurrentPage);
-  const { accessToken } = useAuthStore();
   const [topics, setTopics] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -31,9 +29,9 @@ const GetAllTopics: React.FC = () => {
     const fetchTopics = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:5555/api/topics", {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
+        console.log("Fetching topics...");
+        const response = await axios.get("http://localhost:5555/api/topics");
+        console.log("Topics fetched:", response.data);
         setTopics(response.data);
       } catch (error) {
         setError("Error fetching topics.");
@@ -43,10 +41,8 @@ const GetAllTopics: React.FC = () => {
       }
     };
 
-    if (accessToken) {
-      fetchTopics();
-    }
-  }, [accessToken]);
+    fetchTopics();
+  }, []);
 
   const handleCopyId = (id: string) => {
     navigator.clipboard.writeText(id);
@@ -62,6 +58,14 @@ const GetAllTopics: React.FC = () => {
     );
   }
 
+  if (error) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <Typography color="error">{error}</Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ padding: 3, minHeight: "80vh", minWidth: "80vw" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
@@ -71,23 +75,21 @@ const GetAllTopics: React.FC = () => {
         <Typography variant="h5">Topics ({topics.length} total)</Typography>
       </Box>
 
-      {error && <Typography color="error">{error}</Typography>}
-
       {topics
         .slice((page - 1) * itemsPerPage, page * itemsPerPage)
         .map((topic) => (
-          <Paper 
-            key={topic._id} 
-            sx={{ 
-              p: 2, 
-              mb: 2, 
+          <Paper
+            key={topic._id}
+            sx={{
+              p: 2,
+              mb: 2,
               backgroundColor: "#1E1E1E",
               "&:hover": {
                 backgroundColor: "#2D2D2D",
-              }
+              },
             }}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
               <Typography variant="h6" sx={{ color: "#fff" }}>{topic.name}</Typography>
               <Tooltip title={copiedId === topic._id ? "Copied!" : "Copy ID"}>
                 <Chip
@@ -104,27 +106,21 @@ const GetAllTopics: React.FC = () => {
                 />
               </Tooltip>
             </Box>
-            <Typography 
-              variant="body2" 
-              sx={{ 
-                color: "#ccc",
-                mt: 1 
-              }}
-            >
+            <Typography variant="body2" sx={{ color: "#ccc", mt: 1 }}>
               {topic.description}
             </Typography>
           </Paper>
         ))}
 
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-        <Pagination 
-          count={Math.ceil(topics.length / itemsPerPage)} 
-          page={page} 
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+        <Pagination
+          count={Math.ceil(topics.length / itemsPerPage)}
+          page={page}
           onChange={(_, value) => setPage(value)}
           sx={{
             "& .MuiPaginationItem-root": {
-              color: "#fff"
-            }
+              color: "#fff",
+            },
           }}
         />
       </Box>

@@ -1,31 +1,21 @@
 import React from "react";
 import { Grid, Card, CardContent, Typography } from "@mui/material";
-import useSuperAdminPageStore from "../stores/superAdminPageStore";
-import type { QuestionPageState } from "../stores/superAdminPageStore";
+import useGuestPageStore from "../stores/guestStore";
+import type { GuestPageState } from "../stores/guestStore";
 
-const Picker: React.FC = () => {
-  const setCurrentPage = useSuperAdminPageStore((state) => state.setCurrentPage);
+const GuestPicker: React.FC = () => {
+  const setCurrentPage = useGuestPageStore((state) => state.setCurrentPage);
 
-  const pages: { name: string; page: QuestionPageState["currentPage"] }[] = [
-    { name: "Add Question", page: "AddQuestion" },
-    { name: "Add Question to Topic", page: "AddQuestionToTopic" }, // Added "Add Question to Topic"
-    { name: "Get All Questions", page: "GetAllQuestions" },
-    { name: "Get Question By ID", page: "GetQuestionById" },
-    { name: "Update Question", page: "UpdateQuestion" },
-    { name: "Delete Question", page: "DeleteQuestion" },
-    { name: "Delete All Questions", page: "DeleteAllQuestions" },
-    { name: "Create New Admin", page: "CreateAdmin" },
-    { name: "Add Topic", page: "AddTopic" },
-    { name: "Update Topic", page: "UpdateTopic" },
-    { name: "Get All Topics", page: "GetAllTopics" },
-    { name: "Get Topic By ID", page: "GetTopicById" },
-    { name: "Delete Topic", page: "DeleteTopic" },
+  const pages: { name: string; page: GuestPageState["currentPage"] }[] = [
+    { name: "Consent Form", page: "ConcentForm" },
+    { name: "Questionnaire", page: "Questionnaire" },
+    { name: "Pick Topic", page: "PickTopic" },
   ];
 
   return (
     <div style={{ padding: "2rem" }}>
       <Typography variant="h4" align="center" gutterBottom>
-        Super Admin Access
+        Guest Access
       </Typography>
       <Grid container spacing={3} justifyContent="center">
         {pages.map((p) => (
@@ -57,4 +47,4 @@ const Picker: React.FC = () => {
   );
 };
 
-export default Picker;
+export default GuestPicker;

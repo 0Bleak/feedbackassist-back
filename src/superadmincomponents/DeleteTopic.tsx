@@ -1,75 +1,152 @@
-import React, { useState } from "react";
-import { Box, Button, Typography, CircularProgress, TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import useAuthStore from "../stores/authStore";
+import { 
+  Box, 
+  Typography, 
+  Button, 
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent 
+} from "@mui/material";
+import useSuperAdminPageStore from "../stores/superAdminPageStore";
+
+interface Topic {
+  _id: string;
+  name: string;
+}
 
 const DeleteTopic: React.FC = () => {
-  const [topicId, setTopicId] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const { accessToken } = useAuthStore();
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [selectedTopicId, setSelectedTopicId] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const setCurrentPage = useSuperAdminPageStore((state) => state.setCurrentPage);
 
-  const token = useAuthStore((state) => state.accessToken);
-
-  const handleDelete = async () => {
-    if (!token) {
-      setMessage("No token found. Please log in.");
-      return;
+  useEffect(() => {
+    if (accessToken) {
+      axios
+        .get<Topic[]>("http://localhost:5555/api/topics", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+        .then((res) => {
+          setTopics(res.data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setError("Failed to fetch topics");
+          setLoading(false);
+        });
+    } else {
+      setError("Unauthorized: No access token");
+      setLoading(false);
     }
+  }, [accessToken]);
 
-    if (!topicId.trim()) {
-      setMessage("Please enter a valid topic ID.");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await axios.delete(`http://localhost:5555/api/topics/${topicId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.status === 200 || response.status === 204) {
-        setMessage("Topic deleted successfully");
-        setTopicId(""); // Clear input field after success
-      } else {
-        setMessage("Failed to delete topic. Please try again.");
-      }
-    } catch (error: any) {
-      setMessage(error.response?.data?.message || "Error deleting topic");
-    }
-    setLoading(false);
+  const handleTopicChange = (event: SelectChangeEvent) => {
+    setSelectedTopicId(event.target.value);
   };
 
+  const handleDelete = async () => {
+    if (!selectedTopicId) {
+      alert("Please select a topic to delete");
+      return;
+    }
+
+    const topicIdToDelete = selectedTopicId; // Store the ID
+    console.log(selectedTopicId)
+
+    try {
+      const response = await axios.delete(`http://localhost:5555/api/topics/${topicIdToDelete}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        data: { id: topicIdToDelete } // Send ID in request body
+      });
+
+      if (response.status === 200) {
+        setTopics(prevTopics => prevTopics.filter(topic => topic._id !== topicIdToDelete));
+        setSelectedTopicId("");
+        alert("Topic deleted successfully");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Failed to delete topic");
+    }
+  };
+
+  if (loading) return <CircularProgress />;
+  if (error) return <Typography color="error">{error}</Typography>;
+
   return (
-    <Box sx={{ p: 3, textAlign: "center" }}>
-      <Typography variant="h5" gutterBottom>Delete Topic</Typography>
-      <TextField
-        label="Enter Topic ID"
-        variant="outlined"
-        fullWidth
-        value={topicId}
-        onChange={(e) => setTopicId(e.target.value)}
-        sx={{ mb: 2 }}
-      />
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <Button 
-          onClick={handleDelete}
+    <Box sx={{ 
+      p: 3,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 3,
+      maxWidth: 400,
+      margin: '0 auto'
+    }}>
+      <Typography variant="h4" gutterBottom>
+        Delete Topic
+      </Typography>
+
+      <FormControl fullWidth>
+        <InputLabel id="topic-select-label">Select Topic</InputLabel>
+        <Select
+          labelId="topic-select-label"
+          value={selectedTopicId}
+          label="Select Topic"
+          onChange={handleTopicChange}
+          sx={{
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            '& .MuiSelect-icon': {
+              color: 'white',
+            },
+          }}
+        >
+          {topics.map((topic) => (
+            <MenuItem key={topic._id} value={topic._id}>
+              {topic.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+        <Button
           variant="contained"
           color="error"
-          disabled={!topicId.trim()} // Disable button if input is empty
+          onClick={handleDelete}
+          disabled={!selectedTopicId}
+          sx={{
+            width: '120px',
+            '&.Mui-disabled': {
+              backgroundColor: 'rgba(255, 0, 0, 0.3)',
+            },
+          }}
         >
-          Delete Topic
+          Delete
         </Button>
-      )}
-      {message && (
-        <Typography 
-          color={message.includes("Error") ? "error" : "success"} 
-          sx={{ mt: 2 }}
+
+        <Button
+          variant="outlined"
+          onClick={() => setCurrentPage("Picker")}
+          sx={{
+            width: '120px',
+            borderColor: 'white',
+            color: 'white',
+            '&:hover': {
+              borderColor: 'white',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            },
+          }}
         >
-          {message}
-        </Typography>
-      )}
+          Cancel
+        </Button>
+      </Box>
     </Box>
   );
 };

@@ -1,8 +1,29 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-
+import useGuestPageStore from "../stores/guestStore";
+import ConsentForm from "../guestcomponents/ConsentForm";
+import Questionnaire from "../guestcomponents/Questionnaire";
+import PickTopic from "../guestcomponents/PickTopic";
+import GuestPicker from "../guestcomponents/GuestPicker";
+// Import guest components
 const GuestPage = () => {
   const theme = useTheme();
+  const { currentPage } = useGuestPageStore();
+
+  const renderComponent = () => {
+    switch (currentPage) {
+      case "Picker":
+        return <GuestPicker />;
+      // case "ConcentForm":
+      //   return <ConsentForm />;
+      // case "Questionnaire":
+      //   return <Questionnaire />;
+      case "PickTopic":
+        return <PickTopic />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <Box
@@ -14,17 +35,13 @@ const GuestPage = () => {
         top: 0,
         left: 0,
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         background: `linear-gradient(45deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
       }}
     >
-      <Box sx={{ textAlign: "center" }}>
-        <Typography variant="h3">Welcome, Guest!</Typography>
-        <Typography variant="body1" sx={{ mt: 2 }}>
-          Explore the system as a guest.
-        </Typography>
-      </Box>
+      {renderComponent()}
     </Box>
   );
 };

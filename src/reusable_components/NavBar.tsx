@@ -20,26 +20,28 @@ const Navbar = () => {
 
   const handleAdminClick = () => {
     if (role === "admin" || role === "superadmin") {
-      navigate("/admin");
+      navigate(role === "superadmin" ? "/superadmin" : "/admin");
     } else {
-      navigate("/login");
+      navigate("/home");
     }
   };
 
   const handleLoginClick = () => {
-    navigate("/login");
+    if (!isLoggedIn()) {
+      navigate("/login");
+    }
   };
 
   const handleLogoutClick = () => {
     logout();
-    navigate("/login");
+    navigate("/home");
   };
 
   return (
     <Box
       sx={{
         display: "flex",
-        backgroundColor: 'rgba(0, 31, 63, 0.8)', // Matching your dark blue theme
+        backgroundColor: 'rgba(0, 31, 63, 0.8)',
         padding: "8px 16px",
         width: "auto",
         minWidth: "250px",
@@ -61,19 +63,16 @@ const Navbar = () => {
       <Button sx={buttonStyles(theme)} onClick={handleHomeClick}>
         Home
       </Button>
-
       {(role === "admin" || role === "superadmin") && (
         <Button sx={buttonStyles(theme)} onClick={handleAdminClick}>
           Admin
         </Button>
       )}
-
       {!isAuthenticated && (
         <Button sx={buttonStyles(theme)} onClick={handleLoginClick}>
           Login
         </Button>
       )}
-
       {isAuthenticated && (
         <Button sx={buttonStyles(theme)} onClick={handleLogoutClick}>
           Logout

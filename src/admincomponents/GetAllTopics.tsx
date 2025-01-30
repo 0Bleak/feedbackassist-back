@@ -13,12 +13,12 @@ import {
   ArrowBack as ArrowBackIcon,
   ContentCopy as ContentCopyIcon 
 } from "@mui/icons-material";
-import useQuestionPageStore from "../stores/superAdminPageStore";
 import useAuthStore from "../stores/authStore";
+import useAdminPageStore from "../stores/adminPageStore";
 import axios from "axios";
 
 const GetAllTopics: React.FC = () => {
-  const setCurrentPage = useQuestionPageStore((state) => state.setCurrentPage);
+  const setCurrentPage = useAdminPageStore((state) => state.setCurrentPage);
   const { accessToken } = useAuthStore();
   const [topics, setTopics] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);

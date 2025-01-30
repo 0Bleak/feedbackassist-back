@@ -1,13 +1,25 @@
 import { Box, Typography, Button, useTheme } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { useNavigate } from 'react-router-dom';
+import useAuthStore from '../stores/authStore'; // Import useAuthStore
 
 const AdminBox = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { isLoggedIn, role } = useAuthStore(); // Get isLoggedIn and role
 
   const handleLoginClick = () => {
-    navigate('/login'); // Redirect to the login page
+    if (isLoggedIn()) {
+      // If user is already logged in, redirect based on role
+      if (role === 'superadmin') {
+        navigate('/superadmin');
+      } else if (role === 'admin') {
+        navigate('/admin');
+      }
+    } else {
+      // If not logged in, redirect to login page
+      navigate('/login');
+    }
   };
 
   return (
@@ -52,7 +64,7 @@ const AdminBox = () => {
       </Typography>
       <Button
         variant="contained"
-        onClick={handleLoginClick} // Add onClick handler
+        onClick={handleLoginClick}
         sx={{
           width: '80%',
           marginTop: '4rem',
@@ -69,10 +81,10 @@ const AdminBox = () => {
           },
         }}
       >
-        Login
+        {isLoggedIn() ? 'Enter' : 'Login'}
       </Button>
     </Box>
   );
 };
 
-export default AdminBox;
+export default AdminBox;  

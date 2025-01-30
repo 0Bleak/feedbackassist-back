@@ -49,14 +49,11 @@ const SuperadminPage = () => {
       case "DeleteTopic":
         return <DeleteTopic />;
       case "UpdateTopic":
-        return <EditTopic topicId="" />;
+        return <EditTopic/>;
       case "GetAllTopics":
         return <GetAllTopics />;
       case "GetTopicById":
         return <TopicDetails />;
-      case "DeleteAllTopics":
-        // Add your DeleteAllTopics component here
-        return null;
       default:
         return null;
     }

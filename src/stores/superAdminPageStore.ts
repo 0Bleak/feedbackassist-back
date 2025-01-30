@@ -14,7 +14,6 @@ export interface QuestionPageState {
     | "GetAllTopics"
     | "GetTopicById"
     | "DeleteTopic"
-    | "DeleteAllTopics"
     | "AddTopic"
     | "AddQuestionToTopic"; // Added AddQuestionToTopic page
   setCurrentPage: (page: QuestionPageState["currentPage"]) => void;

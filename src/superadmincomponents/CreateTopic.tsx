@@ -1,16 +1,19 @@
 import React, { useState } from "react";
+import { Button, TextField, Grid, Typography } from "@mui/material";
 import axios from "axios";
-import useAuthStore from "../stores/authStore"; // Import your Zustand store
+import useAuthStore from "../stores/authStore"; // Import your Zustand store for authentication
+import useSuperAdminPageStore from "../stores/superAdminPageStore"; // Import your Zustand store for page navigation
 
 const CreateTopic = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
-  
+
   // Access token from Zustand store
-  const token = useAuthStore((state) => state.accessToken); // Use Zustand store to get the token
-  
-  console.log("Token from Zustand:", token); // Debugging line
+  const token = useAuthStore((state) => state.accessToken);
+
+  // Access setCurrentPage from Zustand store for navigation
+  const setCurrentPage = useSuperAdminPageStore((state) => state.setCurrentPage);
 
   // Handle form submission to create a topic
   const handleCreateTopic = async (e: React.FormEvent) => {
@@ -55,32 +58,54 @@ const CreateTopic = () => {
   };
 
   return (
-    <div className="create-topic">
-      <h2>Create a New Topic</h2>
-      <form onSubmit={handleCreateTopic}>
-        <div>
-          <label htmlFor="name">Topic Name</label>
-          <input
-            type="text"
-            id="name"
+    <form onSubmit={handleCreateTopic}>
+      <Typography variant="h4" mb={2}>
+        Create a New Topic
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Topic Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label htmlFor="description">Description</label>
-          <textarea
-            id="description"
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
-          ></textarea>
-        </div>
-        {error && <div className="error-message">{error}</div>}
-        <button type="submit">Create Topic</button>
-      </form>
-    </div>
+            multiline
+            rows={4}
+          />
+        </Grid>
+        {error && (
+          <Grid item xs={12}>
+            <Typography color="error" align="center">
+              {error}
+            </Typography>
+          </Grid>
+        )}
+        <Grid item xs={12}>
+          <Button type="submit" variant="contained" fullWidth>
+            Create Topic
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={() => setCurrentPage("Picker")} // Navigate back to the Picker page
+          >
+            Return
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
   );
 };
 

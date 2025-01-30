@@ -1,31 +1,25 @@
 import React from "react";
 import { Grid, Card, CardContent, Typography } from "@mui/material";
-import useSuperAdminPageStore from "../stores/superAdminPageStore";
-import type { QuestionPageState } from "../stores/superAdminPageStore";
+import useAdminPageStore from "../stores/adminPageStore";
+import type { AdminPageState } from "../stores/adminPageStore";
 
-const Picker: React.FC = () => {
-  const setCurrentPage = useSuperAdminPageStore((state) => state.setCurrentPage);
+const AdminPicker: React.FC = () => {
+  const setCurrentPage = useAdminPageStore((state) => state.setCurrentPage);
 
-  const pages: { name: string; page: QuestionPageState["currentPage"] }[] = [
+  const pages: { name: string; page: AdminPageState["currentPage"] }[] = [
     { name: "Add Question", page: "AddQuestion" },
-    { name: "Add Question to Topic", page: "AddQuestionToTopic" }, // Added "Add Question to Topic"
+    { name: "Delete Question", page: "DeleteQuestion" },
     { name: "Get All Questions", page: "GetAllQuestions" },
     { name: "Get Question By ID", page: "GetQuestionById" },
     { name: "Update Question", page: "UpdateQuestion" },
-    { name: "Delete Question", page: "DeleteQuestion" },
-    { name: "Delete All Questions", page: "DeleteAllQuestions" },
-    { name: "Create New Admin", page: "CreateAdmin" },
-    { name: "Add Topic", page: "AddTopic" },
-    { name: "Update Topic", page: "UpdateTopic" },
-    { name: "Get All Topics", page: "GetAllTopics" },
-    { name: "Get Topic By ID", page: "GetTopicById" },
-    { name: "Delete Topic", page: "DeleteTopic" },
+    { name: "View Topic Details", page: "TopicDetails" },
+    { name: "View All Topics", page: "GetAllTopics" },
   ];
 
   return (
     <div style={{ padding: "2rem" }}>
       <Typography variant="h4" align="center" gutterBottom>
-        Super Admin Access
+        Admin Access
       </Typography>
       <Grid container spacing={3} justifyContent="center">
         {pages.map((p) => (
@@ -57,4 +51,4 @@ const Picker: React.FC = () => {
   );
 };
 
-export default Picker;
+export default AdminPicker;

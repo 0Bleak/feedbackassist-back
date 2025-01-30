@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import useAuthStore from "../stores/authStore"; // Import useAuthStore to get the token
+import useAuthStore from "../stores/authStore";
+import { Box, Typography, List, ListItem, Button ,CircularProgress} from "@mui/material";
+import useSuperAdminPageStore from "../stores/superAdminPageStore"; // Zustand store for navigation
 
 interface Topic {
   _id: string;
@@ -8,16 +10,17 @@ interface Topic {
 }
 
 const TopicList: React.FC = () => {
-  const { accessToken } = useAuthStore(); // Access token from Zustand store
+  const { accessToken } = useAuthStore();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const setCurrentPage = useSuperAdminPageStore((state) => state.setCurrentPage);
 
   useEffect(() => {
     if (accessToken) {
       axios
         .get<Topic[]>("http://localhost:5555/api/topics", {
-          headers: { Authorization: `Bearer ${accessToken}` }, // Use token for authorization
+          headers: { Authorization: `Bearer ${accessToken}` },
         })
         .then((res) => {
           setTopics(res.data);
@@ -31,22 +34,29 @@ const TopicList: React.FC = () => {
       setError("Unauthorized: No access token");
       setLoading(false);
     }
-  }, [accessToken]); // Fetch topics when accessToken changes
+  }, [accessToken]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <CircularProgress />;
+  if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <div>
-      <h2>Topics</h2>
-      <ul>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4">Topics</Typography>
+      <List>
         {topics.map((topic) => (
-          <li key={topic._id}>
-            <a href={`/topics/${topic._id}`}>{topic.name}</a>
-          </li>
+          <ListItem key={topic._id}>
+            <Typography>{topic.name}</Typography>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+      <Button
+        variant="outlined"
+        onClick={() => setCurrentPage("Picker")} // Navigate back to the Picker page
+        sx={{ mt: 2 }}
+      >
+        Return
+      </Button>
+    </Box>
   );
 };
 
