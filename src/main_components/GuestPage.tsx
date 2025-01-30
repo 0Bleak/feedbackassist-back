@@ -1,11 +1,10 @@
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useGuestPageStore from "../stores/guestStore";
-import ConsentForm from "../guestcomponents/ConsentForm";
+import GuestPicker from "../guestcomponents/GuestPicker";
 import Questionnaire from "../guestcomponents/Questionnaire";
 import PickTopic from "../guestcomponents/PickTopic";
-import GuestPicker from "../guestcomponents/GuestPicker";
-// Import guest components
+
 const GuestPage = () => {
   const theme = useTheme();
   const { currentPage } = useGuestPageStore();
@@ -14,10 +13,8 @@ const GuestPage = () => {
     switch (currentPage) {
       case "Picker":
         return <GuestPicker />;
-      // case "ConcentForm":
-      //   return <ConsentForm />;
-      // case "Questionnaire":
-      //   return <Questionnaire />;
+      case "Questionnaire":
+        return <Questionnaire />;
       case "PickTopic":
         return <PickTopic />;
       default:
@@ -30,7 +27,7 @@ const GuestPage = () => {
       sx={{
         height: "100vh",
         width: "100vw",
-        overflow: "hidden",
+        overflow: "auto",
         position: "fixed",
         top: 0,
         left: 0,
