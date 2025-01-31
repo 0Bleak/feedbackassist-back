@@ -9,10 +9,10 @@ export interface AdminPageState {
     | "GetQuestionById"
     | "UpdateQuestion"
     | "TopicDetails"
-    | "GetAllTopics";
+    | "GetAllTopics"
+    | "ViewUserResponses"; // Added here
   setCurrentPage: (page: AdminPageState["currentPage"]) => void;
 }
-
 const useAdminPageStore = create<AdminPageState>((set) => ({
   currentPage: "Picker",
   setCurrentPage: (page) => set({ currentPage: page }),

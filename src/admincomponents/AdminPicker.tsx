@@ -14,7 +14,9 @@ const AdminPicker: React.FC = () => {
     { name: "Update Question", page: "UpdateQuestion" },
     { name: "View Topic Details", page: "TopicDetails" },
     { name: "View All Topics", page: "GetAllTopics" },
+    { name: "View User Responses", page: "ViewUserResponses" }, // New addition
   ];
+  
 
   return (
     <div style={{ padding: "2rem" }}>

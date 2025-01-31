@@ -7,7 +7,7 @@ const GuestPicker: React.FC = () => {
   const setCurrentPage = useGuestPageStore((state) => state.setCurrentPage);
 
   const pages: { name: string; page: GuestPageState["currentPage"] }[] = [
-    { name: "Consent Form", page: "ConcentForm" },
+    { name: "Consent Form", page: "ConsentForm" }, // Fixed typo here
     { name: "Questionnaire", page: "Questionnaire" },
     { name: "Pick Topic", page: "PickTopic" },
   ];
@@ -27,6 +27,11 @@ const GuestPicker: React.FC = () => {
                 borderRadius: "16px",
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
                 transition: "transform 0.2s, box-shadow 0.2s",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between", // Ensures spacing between elements
+                minWidth: "200px",
+                margin: "2rem",
                 "&:hover": {
                   transform: "scale(1.05)",
                   boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
@@ -34,7 +39,7 @@ const GuestPicker: React.FC = () => {
               }}
               onClick={() => setCurrentPage(p.page)}
             >
-              <CardContent>
+              <CardContent sx={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%" }}>
                 <Typography variant="h6" fontWeight="bold">
                   {p.name}
                 </Typography>

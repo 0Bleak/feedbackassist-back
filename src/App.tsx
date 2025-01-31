@@ -19,7 +19,7 @@ const App: React.FC = () => {
           <Box sx={{ 
             position: 'fixed',
             top: '5px',
-            left: '50%',
+            left: '100%',
             transform: 'translateX(-50%)',
             zIndex: 9999,
             width: 'auto'

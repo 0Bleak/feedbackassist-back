@@ -15,7 +15,8 @@ export interface QuestionPageState {
     | "GetTopicById"
     | "DeleteTopic"
     | "AddTopic"
-    | "AddQuestionToTopic"; // Added AddQuestionToTopic page
+    | "AddQuestionToTopic"
+    | "ViewUserResponses";  // Added ViewUserResponses page for superadmin
   setCurrentPage: (page: QuestionPageState["currentPage"]) => void;
 }
 

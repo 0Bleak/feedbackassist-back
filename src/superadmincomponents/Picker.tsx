@@ -5,10 +5,10 @@ import type { QuestionPageState } from "../stores/superAdminPageStore";
 
 const Picker: React.FC = () => {
   const setCurrentPage = useSuperAdminPageStore((state) => state.setCurrentPage);
-
+  
   const pages: { name: string; page: QuestionPageState["currentPage"] }[] = [
     { name: "Add Question", page: "AddQuestion" },
-    { name: "Add Question to Topic", page: "AddQuestionToTopic" }, // Added "Add Question to Topic"
+    { name: "Add Question to Topic", page: "AddQuestionToTopic" },
     { name: "Get All Questions", page: "GetAllQuestions" },
     { name: "Get Question By ID", page: "GetQuestionById" },
     { name: "Update Question", page: "UpdateQuestion" },
@@ -20,7 +20,9 @@ const Picker: React.FC = () => {
     { name: "Get All Topics", page: "GetAllTopics" },
     { name: "Get Topic By ID", page: "GetTopicById" },
     { name: "Delete Topic", page: "DeleteTopic" },
+    { name: "View User Responses", page: "ViewUserResponses" }, // Add ViewUserResponses for superadmin
   ];
+  
 
   return (
     <div style={{ padding: "2rem" }}>

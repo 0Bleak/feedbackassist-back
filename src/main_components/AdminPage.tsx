@@ -12,12 +12,14 @@ import GetQuestionById from "../admincomponents/GetQuestionById";
 import TopicDetails from "../admincomponents/TopicDetails";
 import GetAllTopics from "../admincomponents/GetAllTopics";
 import UpdateQuestion from "../admincomponents/UpdateQuestion";
+import ViewUserResponses from "../admincomponents/ViewUserResponses"; // Import the component
 
 const AdminPage = () => {
   const theme = useTheme();
   const { role } = useAuthStore();
   const { currentPage } = useAdminPageStore();
 
+ 
   const renderComponent = () => {
     switch (currentPage) {
       case "Picker":
@@ -36,26 +38,29 @@ const AdminPage = () => {
         return <GetAllTopics />;
       case "UpdateQuestion":
         return <UpdateQuestion />;
+      case "ViewUserResponses": // New case
+        return <ViewUserResponses />;
       default:
         return null;
     }
   };
+  
 
   return (
     <Box
-      sx={{
-        height: "100vh",
-        width: "100vw",
-        overflow: "hidden",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        background: `linear-gradient(45deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-      }}
+    sx={{
+      height: "100vh",
+      width: "100vw",
+      overflow: "hidden",
+      position: "fixed",
+      top: 0,
+      left: 0,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      background: `linear-gradient(45deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+    }}
     >
       {role === "admin" && renderComponent()}
     </Box>

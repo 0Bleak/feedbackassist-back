@@ -26,6 +26,7 @@ const GetAllTopics: React.FC = () => {
   const [page, setPage] = React.useState<number>(1);
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
   const itemsPerPage = 5;
+  
 
   React.useEffect(() => {
     const fetchTopics = async () => {

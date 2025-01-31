@@ -3,7 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import useAuthStore from "../stores/authStore";
 import useQuestionPageStore from "../stores/superAdminPageStore";
 import AddQuestion from "../superadmincomponents/AddQuestion";
-import AddQuestionToTopic from "../superadmincomponents/AddQuestionToTopic"; // Imported AddQuestionToTopic
+import AddQuestionToTopic from "../superadmincomponents/AddQuestionToTopic";
 import GetAllQuestions from "../superadmincomponents/GetAllQuestions";
 import GetQuestionById from "../superadmincomponents/GetQuestionById";
 import UpdateQuestion from "../superadmincomponents/UpdateQuestion";
@@ -17,11 +17,16 @@ import DeleteTopic from "../superadmincomponents/DeleteTopic";
 import EditTopic from "../superadmincomponents/EditTopic";
 import GetAllTopics from "../superadmincomponents/GetAllTopics";
 import TopicDetails from "../superadmincomponents/TopicDetails";
+// Import the new ViewUserResponses component
+import ViewUserResponses from "../superadmincomponents/ViewUserResponses"; // Added
 
 const SuperadminPage = () => {
   const theme = useTheme();
   const { role } = useAuthStore();
   const { currentPage } = useQuestionPageStore();
+
+  console.log("Role:", role);
+  console.log("Current Page:", currentPage);
 
   const renderComponent = () => {
     switch (currentPage) {
@@ -29,7 +34,7 @@ const SuperadminPage = () => {
         return <Picker />;
       case "AddQuestion":
         return <AddQuestion />;
-      case "AddQuestionToTopic": // Render the "Add Question to Topic" component
+      case "AddQuestionToTopic":
         return <AddQuestionToTopic />;
       case "GetAllQuestions":
         return <GetAllQuestions />;
@@ -43,17 +48,19 @@ const SuperadminPage = () => {
         return <DeleteAllQuestions />;
       case "CreateAdmin":
         return <CreateAdmin />;
-      // Add topic cases
       case "AddTopic":
         return <CreateTopic />;
       case "DeleteTopic":
         return <DeleteTopic />;
       case "UpdateTopic":
-        return <EditTopic/>;
+        return <EditTopic />;
       case "GetAllTopics":
         return <GetAllTopics />;
       case "GetTopicById":
         return <TopicDetails />;
+      // Handle the case for "ViewUserResponses"
+      case "ViewUserResponses":
+        return <ViewUserResponses />;
       default:
         return null;
     }
@@ -75,7 +82,7 @@ const SuperadminPage = () => {
         background: `linear-gradient(45deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
       }}
     >
-      {role === "superadmin" && renderComponent()}
+      {role === "superadmin" ? renderComponent() : <div>Not authorized</div>}
     </Box>
   );
 };
